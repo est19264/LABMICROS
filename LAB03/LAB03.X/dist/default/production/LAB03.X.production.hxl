@@ -2,12 +2,12 @@
 ### Memory Usage ###
  Unused memory ranges:
   6h - 1FFh
-  262h - 400Dh
+  2B0h - 400Dh
   4012h - 403Fh
   
- dist/default/production\LAB02.X.production.hex ranges:
+ dist/default/production\LAB03.X.production.hex ranges:
   0h - 5h
-  200h - 261h
+  200h - 2AFh
   400Eh - 4011h
   
 ### Hex Memory Map ###
@@ -21,8 +21,9 @@
   T = Trailing code
   & = Find & replace opcode
   X = Find & delete opcode
-  1 = dist/default/production\LAB02.X.production.hex
+  1 = dist/default/production\LAB03.X.production.hex
 00000000: 111111----------------------------------------------------------
 00000200: 1111111111111111111111111111111111111111111111111111111111111111
-00000240: 1111111111111111111111111111111111------------------------------
+00000240: 1111111111111111111111111111111111111111111111111111111111111111
+00000280: 111111111111111111111111111111111111111111111111----------------
 00004000: --------------1111----------------------------------------------
