@@ -81,25 +81,20 @@ PROCESSOR 16F887
 	
 ; Configurar inputs en PORTA
 	BANKSEL TRISA		; Se selecciona Bank 1
-	;movlw	00000011B	; Se ingresan los inputs en TRISA
-	;movwf	TRISA
-	bsf	TRISA, 0
+	bsf	TRISA, 0	; Se ingresan los inputs en TRISA
 	bsf	TRISA, 1
 	
 ; Configurar outputs en PORTB, PORTC y PORTD
-	;movlw	00000000B	; Se ingresan los outputs en TRISB
-	;movwf	TRISB
-	bcf	TRISB, 0
-	bcf	TRISB, 1	; R1 lo defino como output
-	bcf	TRISB, 2	; R2 lo defino como output
-	bcf	TRISB, 3	; R3 lo defino como output
+	bcf	TRISB, 0	; Se ingresan los outputs en TRISB
+	bcf	TRISB, 1	
+	bcf	TRISB, 2	
+	bcf	TRISB, 3	
 	
 	movlw	00000000B	; Se ingresan los outputs en TRISC
 	movwf	TRISC
 	
-	;movlw	00000000B	; Se ingresan los outputs en TRISD
-	;movwf	TRISD
-	bcf	TRISD, 0
+	
+	bcf	TRISD, 0	; Se ingresan los outputs en TRISD
 	
 
 ; Configuración para el reloj 
@@ -110,14 +105,6 @@ PROCESSOR 16F887
 	bsf	    SCS		; Reloj interno
 	
 ; Configuració para timer0
-	;BANKSEL TRISA
-	;bcf	    T0CS	; Reloj interno
-	;bcf	    PSA		; Prescaler para timer0
-	;bsf	    PS2
-	;bsf	    PS1
-	;bcf	    PS0		; PS = 110 = 128
-	;BANKSEL PORTA
-	;call    reiniciar_timer0
 	BANKSEL OPTION_REG
 	movlw   11000110B	; Prescaler de 1:256
 	movwf   OPTION_REG
