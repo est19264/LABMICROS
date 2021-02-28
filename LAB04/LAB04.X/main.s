@@ -1,6 +1,6 @@
 ;Archivo:		main.s   -   Lab4
 ;Dispositivo:		PIC16F887
-;Autor:			Diego Estrada
+;Autor:			Diego Estrada - 19264
 ;Compilador:		pic-as (v2.30), MPLABX V5.40
 ;
 ;Programa:		
@@ -169,7 +169,7 @@ main:
     clrf    PORTC
     clrf    PORTD
 
-;-------------------------------- Loop ----------------------------------------
+;--------------------------------- Loop ----------------------------------------
 
 loop:
     call    display_c
@@ -189,7 +189,7 @@ config_ioc:
     
 reloj:
     banksel  OSCCON
-    bsf      IRCF2		; IRCF = 110 4MHz
+    bsf      IRCF2		; 
     bsf	     IRCF1
     bsf	     IRCF0
     bsf	     SCS		; reloj interno
