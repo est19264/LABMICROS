@@ -33,7 +33,6 @@ reset02 macro			; Macro para el reinicio del timer 2
     BANKSEL PR2
     movlw   100			; Tiempo de intruccion
     movwf   PR2
-
     endm
     
 ;------------------------------- Variables -------------------------------------
@@ -212,7 +211,7 @@ main:
     BANKSEL OPTION_REG
     bcf	    T0CS
     bcf	    PSA			; Se utilza el prescaler del timer0
-    bsf	    PS0			; Prescaler 11 = 1:256
+    bsf	    PS0			; Prescaler 111 = 1:256
     bsf	    PS1
     bsf	    PS2
     

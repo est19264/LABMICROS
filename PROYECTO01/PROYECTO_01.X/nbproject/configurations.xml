@@ -13,8 +13,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>main_proyecto01.s</itemPath>
-      <itemPath>prueba.s</itemPath>
-      <itemPath>p2.s</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -522,8 +520,6 @@
                   value=""/>
         <property key="warningmessagebreakoptions.warningmessages" value="holdstate"/>
       </Simulator>
-      <item path="main_proyecto01.s" ex="true" overriding="false">
-      </item>
       <pic-as-assembler>
         <property key="fmax-errors" value="20"/>
         <property key="list-custom-assembler-options" value=""/>
@@ -567,8 +563,6 @@
         <property key="linker-rom" value=""/>
         <property key="linker-serial" value=""/>
       </pic-as-linker>
-      <item path="prueba.s" ex="true" overriding="false">
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>
