@@ -2482,56 +2482,55 @@ ENDM
     MODE EQU 2
 
 ;--------------------------------- Macros --------------------------------------
-reset02 macro ; Macro para el reinicio del timer 2
-    BANKSEL PR2
-    movlw 100 ; Tiempo de intruccion
-    movwf PR2
-    endm
-
-; Rutina para configuración del reset timer0
-reinicio_tmr0 macro
-    BANKSEL PORTA
-    movlw 255 ; Tiempo de la instrucción
-    movwf TMR0
-    bcf ((INTCON) and 07Fh), 2 ; Se vuelve 0 el bit de overflow
-    endm
-
+; Rutina para el delay de parpadeo
 delay_small macro
     movlw 248 ; Valor inicial del contador
-    movwf cont_small
-    decfsz cont_small, 1 ; Decrmentar el contador
-    goto $-1 ; Ejecutar linea anterior
+    movwf small
+    decfsz small, 1 ; Se decrmenta el contador
+    goto $-1
     endm
 
 ;------------------------------- Variables -------------------------------------
 ; Variables guardadas en la common memory
 PSECT udata_bank0
-    disp: DS 7
-    tiempo: DS 1
+    small: DS 1
+    flags: DS 1
+    fsem: DS 1
+    fcolor: DS 1
+    flagreset: DS 1
+    festm: DS 1
+    display: DS 7
+    dispm1: DS 1
+    dispm2: DS 1
     counter: DS 1
     contador1: DS 1
     contador2: DS 1
     contador3: DS 1
+    counterm: DS 1
     decena: DS 1
-    banderas: DS 1
     residuo: DS 1
-    fsem: DS 1
+    restante: DS 1
+    equivalente: DS 1
     semtemp1: DS 1
     semtemp2: DS 1
     semtemp3: DS 1
-    fcolor: DS 1
-    restante: DS 1
+    tempm: DS 1
     sem_vf: DS 1
     sem_vt: DS 1
     sem_a: DS 1
-    flagreset: DS 1
-    cont_small: DS 1
-    equivalente: DS 1
+    estado: DS 1
+    modsel: DS 1
+    modo: DS 1
+    modtemp1: DS 1
+    modtemp2: DS 1
+    modtemp3: DS 1
+    modesel: DS 1
+    reinicio: DS 1
+
 ; Variables guardadas en la memoria compartida
 PSECT udata_shr
     W_TEMP: DS 1 ; Variable para que se guarde w
     STATUS_TEMP: DS 1 ; Variable para que guarde status
-; disp_var: DS 8
 
 ;----------------------- Instrucciones vector reset ----------------------------
 PSECT resVect, class=code, abs, delta=2
@@ -2550,13 +2549,13 @@ push:
 
 isr:
     BANKSEL PORTB
-; btfsc ((INTCON) and 07Fh), 0 ; Revisar si hay interrupciones en el puerto b
-; call active
+    btfsc ((INTCON) and 07Fh), 0 ; Se revisa si hay interrupciones en PORTB
+    call mode_select
 
-    btfsc ((INTCON) and 07Fh), 2 ; Revisar si hay overflow del timer0
+    btfsc ((INTCON) and 07Fh), 2 ; Se revisa si hay overflow del timer0
     call int_tmr0
 
-    btfsc ((PIR1) and 07Fh), 0 ; Revisar si hay overflow del timer1
+    btfsc ((PIR1) and 07Fh), 0 ; Se revisa si hay overflow del timer1
     call int_tmr1
 
 pop:
@@ -2568,103 +2567,127 @@ pop:
 
 
 ;------------------------ Sub-rutinas de interrupción --------------------------
-int_tmr1: ; Interruocion timer1
+; Configuración de interrupción para el timer1 ---------------------------------
+int_tmr1:
     BANKSEL TMR1H
-    movlw 0xE1 ; Modifico los registros del timer1
+    movlw 0xE1 ; Se modifican los registros del timer1
     movwf TMR1H
 
     BANKSEL TMR1L
     movlw 0x7C
     movwf TMR1L
 
-    incf counter ; Se decrementa la variable para el timer
-    bcf ((PIR1) and 07Fh), 0
+    incf counter ; Se decrementa la variable para el timer1
+    bcf ((PIR1) and 07Fh), 0 ; Se limpia la bandera
     return
 
+; Configuración de la interrupción del timer0 ----------------------------------
 int_tmr0:
-    call reset0 ;se hace la interrupcion del timer ;se limpia el PORTB
-    clrf PORTD
-    btfsc banderas, 0 ; se hace el bit test para´pasar a un display
-    goto display_0 ;se va al display 1
-    btfsc banderas, 1 ; se hace el bit test para´pasar a un display
-    goto display_1 ; se va al display 2
-    btfsc banderas, 2 ; se hace el bit test para´pasar a un display
-    goto display_2 ; se va al display3
-    btfsc banderas, 3
-    goto display_3
-    btfsc banderas, 4
-    goto display_4
-    btfsc banderas, 5
-    goto display_5
-    btfsc banderas, 6
-    goto display_6
-    btfsc banderas, 7
-    goto display_7
+    call reset_tmr0 ; Se resetea el timer0
+    clrf PORTD ; Se limpian los pinesdel puerto para el 7 segmentos
 
+; Lo que se busca hacer aca es revisar que display esta activado he ir al sig.
+    btfsc flags, 0 ; Se verifica la bandera
+    goto disp2
+    btfsc flags, 1
+    goto disp3
+    btfsc flags, 2
+    goto disp4
+    btfsc flags, 3
+    goto disp5
+    btfsc flags, 4
+    goto disp6
+    btfsc flags, 5
+    goto disp7
+    btfsc flags, 6
+    goto disp8
 
-display_0:
-    movf disp+0,W ;funcion del display
-    movwf PORTC ; mueve la variale display al PORTC
-    bsf PORTD,0 ;se activa el bit en la bandera definida
-    bcf banderas, 0
-    bsf banderas, 1
-    return
-
-display_1:
-    movf disp+1,W
+; Rutinas internas para activar los displays -----------------------------------
+disp1:
+    movf display, w
+    movwf PORTC
+    bsf PORTD, 0
+    goto siguiente_disp
+disp2:
+    movf display+1, W
     movwf PORTC
     bsf PORTD, 1
-    bcf banderas, 1
-    bsf banderas, 2
-    return
-
- display_2:
-    movf disp+2,W
+    goto siguiente_disp01
+disp3:
+    movf display+2, W
     movwf PORTC
-    bsf PORTD,2
-    bcf banderas,2
-    bsf banderas,3
-    return
-
- display_3:
-    movf disp+3,W
+    bsf PORTD, 2
+    goto siguiente_disp02
+disp4:
+    movf display+3, W
     movwf PORTC
     bsf PORTD, 3
-    bcf banderas,3
-    bsf banderas,4
-    return
-
- display_4:
-    movf disp+4,W
+    goto siguiente_disp03
+disp5:
+    movf display+4, W
     movwf PORTC
     bsf PORTD, 4
-    bcf banderas,4
-    bsf banderas,5
-    return
-
- display_5:
-    movf disp+5,W
+    goto siguiente_disp04
+disp6:
+    movf display+5, W
     movwf PORTC
     bsf PORTD, 5
-    bcf banderas,5
-    bsf banderas,6
-    return
-
- display_6:
-    movf disp+6,W
+    goto siguiente_disp05
+disp7:
+    movf dispm1, W
     movwf PORTC
     bsf PORTD, 6
-    bcf banderas,6
-    bsf banderas,7
-    return
-
-display_7:
-    movf disp+7,W
+    goto siguiente_disp06
+disp8:
+    movf dispm2, W
     movwf PORTC
     bsf PORTD, 7
-    bcf banderas,7
-    bsf banderas,0
+    goto siguiente_disp07
+
+; Rutinas para las rotaciones de los displays ----------------------------------
+siguiente_disp:
+    MOVLW 00000001B
+    XORWF flags, 1
+    RETURN
+siguiente_disp01:
+    MOVLW 00000011B
+    xorwf flags, 1
     return
+siguiente_disp02:
+    movlw 00000110B
+    xorwf flags, 1
+    return
+siguiente_disp03:
+    movlw 00001100B
+    xorwf flags, 1
+    return
+siguiente_disp04:
+    movlw 00011000B
+    xorwf flags, 1
+    return
+siguiente_disp05:
+    movlw 00110000B
+    xorwf flags, 1
+    return
+siguiente_disp06:
+    movlw 01100000B
+    xorwf flags, 1
+    return
+siguiente_disp07:
+    clrf flags
+    return
+
+; Rutina para los pushbuttons --------------------------------------------------
+mode_select:
+    btfss PORTB, UP ; Se revisa si se presiona el push 1
+    call inctemp ; Llama a la rutina de incremento de tiempo
+    btfss PORTB, DOWN ; Se revisa si se presiona el push 2
+    call dectemp ; Llama a la rutina de decremento de tiempo
+    btfss PORTB, MODE
+    call estadom ; Llama a la rutina de seleccion de modo
+    bcf ((INTCON) and 07Fh), 0
+    return
+
 ;-------------------------------- Tabla ----------------------------------------
     PSECT code, delta=2, abs
     ORG 100h ; Posición para el código de la tabla
@@ -2704,14 +2727,6 @@ main:
 ; Configuración para inputs y outputs de los puertos ---------------------------
     BANKSEL TRISA
     ; Configuración para inputs/outputs de PORTA
-; bcf TRISA, 0
-; bcf TRISA, 1
-; bcf TRISA, 2
-; bcf TRISA, 3
-; bcf TRISA, 4
-; bcf TRISA, 5
-; bcf TRISA, 6
-; bcf TRISA, 7
     movlw 00000000B
     movwf TRISA
 
@@ -2724,24 +2739,12 @@ main:
     bcf TRISB, 7
 
     ; Configuración para inputs/outputs de PORTC
-    bcf TRISC, 0
-    bcf TRISC, 1
-    bcf TRISC, 2
-    bcf TRISC, 3
-    bcf TRISC, 4
-    bcf TRISC, 5
-    bcf TRISC, 6
-    bcf TRISC, 7
+    movlw 00000000B
+    movwf TRISC
 
     ; Configuración para inputs/outputs de PORTD
-    bcf TRISD, 0
-    bcf TRISD, 1
-    bcf TRISD, 2
-    bcf TRISD, 3
-    bcf TRISD, 4
-    bcf TRISD, 5
-    bcf TRISD, 6
-    bcf TRISD, 7
+    movlw 00000000B
+    movwf TRISD
 
     ; Configuración para inputs/outputs de PORTE
     bcf TRISE, 0
@@ -2758,23 +2761,22 @@ main:
 
 
 ; Configuracion de Pull-up interno ---------------------------------------------
-    ; Poner puerto b en pull-up
+    ; Se ponen los pines de PORTB en pull-up
     BANKSEL OPTION_REG
     bcf OPTION_REG, 7
 
     BANKSEL WPUB
-    bsf WPUB, 0 ; Se activa el pull-up interno
-    bsf WPUB, 1 ; Se activa el pull-up interno
-    bsf WPUB, 2 ; Los demas pull-up se desactivan
-    bcf WPUB, 3
-    bcf WPUB, 4
+    bsf WPUB, 0 ; Se activa el pull-up interno del pin ((PORTB) and 07Fh), 0
+    bsf WPUB, 1 ; Se activa el pull-up interno del pin ((PORTB) and 07Fh), 1
+    bsf WPUB, 2 ; Se activa el pull-up interno del pin ((PORTB) and 07Fh), 2
+    ; Se desactivan los pull-ups internos del resto de pines
     bcf WPUB, 5
     bcf WPUB, 6
     bcf WPUB, 7
 
 ; Interrupciones ---------------------------------------------------------------
-    BANKSEl IOCB ; Activar interrupciones
-    movlw 00000111B ; Activar las interrupciones en ((PORTB) and 07Fh), 0 y ((PORTB) and 07Fh), 1
+    BANKSEl IOCB ; Se activan las interrupciones
+    movlw 00000111B ; Se activan las interrupciones en ((PORTB) and 07Fh), 0 y ((PORTB) and 07Fh), 1
     movwf IOCB
 
     BANKSEL INTCON
@@ -2791,7 +2793,7 @@ main:
     bsf ((OPTION_REG) and 07Fh), 0 ; Prescaler 111 = 1:256
     bsf ((OPTION_REG) and 07Fh), 1
     bsf ((OPTION_REG) and 07Fh), 2
-    reinicio_tmr0
+    call reset_tmr0 ; Se reinicia el timer0
 
 ; Configuración para timer1 ----------------------------------------------------
     BANKSEL T1CON
@@ -2799,21 +2801,6 @@ main:
     bsf ((T1CON) and 07Fh), 4
     bcf ((T1CON) and 07Fh), 1 ; Internal clock
     bsf ((T1CON) and 07Fh), 0 ; Habilitar Timer1
-
-
-; Configuración para timer2 ----------------------------------------------------
-    BANKSEL T2CON
-; bsf ((T2CON) and 07Fh), 6
-; bcf ((T2CON) and 07Fh), 5
-; bcf ((T2CON) and 07Fh), 4
-; bsf ((T2CON) and 07Fh), 3 ; Postcaler = 1001
-; bsf ((T2CON) and 07Fh), 2 ; Habilitar Timer2
-; bsf ((T2CON) and 07Fh), 1 ; Prescaler 10 = 16
-; bcf ((T2CON) and 07Fh), 0
-    BANKSEL T2CON
-    movlw 1001110B ;1001 para el postcaler, 1 timer 2 on, 10 precaler 16
-    movwf T2CON
-
 
 ; Se limpian todos los puertos -------------------------------------------------
     BANKSEL PORTA
@@ -2825,46 +2812,58 @@ main:
 
 ; Variables para los tiempos ---------------------------------------------------
     movlw 10
-; movwf tiempo
+    movwf tempm
     movwf contador1
     movwf contador2
     movwf contador3
 
 ;--------------------------------- Loop ----------------------------------------
 loop:
-    call config_semaforos
-    call timers
-    call tiemposem1
+
+    ; Se mandan a llamar las rutinas para el funcionamiento de los semáforos
+    call config_semaforos ; Se llama a la configuración de leds para los semaforos
+    call timers ; Se llama a la configuración de tiempos ára los semáforos
+    call tiemposem1 ; Se llaman las configuraciones de los displays de los semáforos
     call tiemposem2
     call tiemposem3
 
+    ; Se mandan a llamar las rutinas para el funcionamiento de los modos
+    btfsc modsel, 0 ; Se revisan las banderas
+    call modo1 ; Se llama a una rutina de configuración de displays de modo
+    btfsc modsel, 1
+    call modo2
+    btfsc modsel, 2
+    call modo3
+    btfsc modsel, 3
+    call accept ; Se llama la rutina de aceptar cambios
 
 goto loop
 
-
 ;------------------------------ Sub-Rutinas ------------------------------------
-; Configuración para pines ioc en PORTB
-;config_ioc:
-; banksel TRISA
-; bsf IOCB, UP
-; bsf IOCB, DOWN
-; bsf IOCB, MODE
-;
-; banksel PORTA
-; movf PORTB, W
-; bcf ((INTCON) and 07Fh), 0
-; return
-
-; Rutina para configuración del reset timer0
-reset0:
+; Rutina para configuración del reset timer0 -----------------------------------
+reset_tmr0:
     BANKSEL PORTA
     movlw 255 ; Tiempo de la instrucción
     movwf TMR0
     bcf ((INTCON) and 07Fh), 2 ; Se vuelve 0 el bit de overflow
     return
 
+; Subrutina para limpiar todas las banderas ------------------------------------
+reseteoc:
+    call reseteom
+    clrf fsem
+    clrf fcolor
+    clrf festm
+    clrf counter
+    clrf modsel
+    clrf semtemp1
+    clrf semtemp2
+    clrf semtemp3
+    return
+
+; Configuración para los displays de los semáforos -----------------------------
+; Para el primer semáforo
 tiemposem1:
-    ; Para el primer semáforo
     clrf decena
     clrf residuo
     bcf STATUS, 0
@@ -2875,69 +2874,68 @@ tiemposem1:
     subwf residuo, f ; Se le resta 10 a residuos
     btfsc STATUS, 0 ; Se verifica la bandera de status carry
     goto $-3
-    decf decena ; Se incrementa la variable decenas si la bandera es 1
+    decf decena ; Se incrementa la variable decenas si carry = 1
     addwf residuo
-    movf decena, w
-    call tabla7seg
-    movwf disp
+    movf decena, w ; Se guardan los resultados
+    call tabla7seg ; Se traducen los resultados con la tabla
+    movwf display ; Se mandan los resultados a los displays
     movf residuo, w
     call tabla7seg
-    movwf disp+1
+    movwf display+1
     return
 
+; Para el segundo semáforo
 tiemposem2:
-    ; Para el segundo semáforo
     clrf decena
     clrf residuo
     bcf STATUS, 0
-    movf semtemp2, w ; Se mueve lo que hay en el contador a w
-    movwf residuo ; Se mueve w a la variable residuos para operar las decenas
-    movlw 10 ; Se mueve 10 a w
+    movf semtemp2, w
+    movwf residuo
+    movlw 10
     incf decena
-    subwf residuo, f ; Se le resta 10 a residuos
-    btfsc STATUS, 0 ; Se verifica la bandera de status carry
+    subwf residuo, f
+    btfsc STATUS, 0
     goto $-3
-    decf decena ; Se incrementa la variable decenas si la bandera es 1
+    decf decena
     addwf residuo
     movf decena, w
     call tabla7seg
-    movwf disp+2
+    movwf display+2
     movf residuo, w
     call tabla7seg
-    movwf disp+3
+    movwf display+3
     return
 
+; Para el tercer semáforo
 tiemposem3:
-    ; Para el tercer semáforo
     clrf decena
     clrf residuo
     bcf STATUS, 0
-    movf semtemp3, w ; Se mueve lo que hay en el contador a w
-    movwf residuo ; Se mueve w a la variable residuos para operar las decenas
-    movlw 10 ; Se mueve 10 a w
+    movf semtemp3, w
+    movwf residuo
+    movlw 10
     incf decena
-    subwf residuo, f ; Se le resta 10 a residuos
-    btfsc STATUS, 0 ; Se verifica la bandera de status carry
+    subwf residuo, f
+    btfsc STATUS, 0
     goto $-3
-    decf decena ; Se incrementa la variable decenas si la bandera es 1
+    decf decena
     addwf residuo
     movf decena, w
     call tabla7seg
-    movwf disp+4
+    movwf display+4
     movf residuo, w
     call tabla7seg
-    movwf disp+5
+    movwf display+5
     return
 
+; NOTA: El unico cambio entre las tres subrutinas es el valor del contador utilizado(semtemp)
+# 491 "p2.s"
 ; Subrutina de decremento para los semaforos -----------------------------------
 timers:
-
-    btfsc fsem, 0 ; flagsem es una variable
+    btfsc fsem, 0 ; Se revisa que bandera está encendida
     goto tsem2
-
     btfsc fsem, 1
     goto tsem3
-
     btfsc fsem, 2
     goto resettemp
 
@@ -2986,30 +2984,23 @@ resettemp: ; Reinicio de timers
     bcf ((PIR1) and 07Fh), 0 ; Se limpia el overflow del timer1
     return
 
-; Configuración para los colores de los semáforos
+; Configuración para los colores de los semáforos ------------------------------
 ; Para esto se creo una subrutina diferente para cada combinación
 config_semaforos:
     btfsc fcolor, 0
     goto combinacion2
-
     btfsc fcolor, 1
     goto combinacion3
-
     btfsc fcolor, 2
     goto combinacion4
-
     btfsc fcolor, 3
     goto combinacion5
-
     btfsc fcolor, 4
     goto combinacion6
-
     btfsc fcolor, 5
     goto combinacion7
-
     btfsc fcolor, 6
     goto combinacion8
-
     btfsc fcolor, 7
     goto combinacion9
 
@@ -3167,11 +3158,214 @@ combinacion9: ; Amarillo
     bsf PORTE, 0
     return
 
-
 equi:
     movlw 6
     addwf restante, w
     movwf equivalente
+    return
+
+; Configuración para la selección de modo --------------------------------------
+    estadom:
+    incf estado ; Se incrementa una variable para verificar el estado
+    btfsc festm, 0 ; flagst es una variable
+    goto estm1
+    btfsc festm, 1
+    goto estm2
+    btfsc festm, 2
+    goto estm3
+    btfsc festm, 3
+    goto reseteom
+
+estm: ; Modo0
+    bcf PORTB, 5 ; Se apagan todas las leds
+    bcf PORTB, 6
+    bcf PORTB, 7
+    bcf STATUS, 2 ; Se limpia la bandera del status
+    movlw 1
+    movwf counterm ; Se revisa si la variable es 1
+    movf estado, w
+    subwf counterm, w
+    btfss STATUS, 2 ; Cuando sea uno, se activa el status
+    goto $+4
+    bsf PORTB, 5 ; Se activa la led para el siguiente estado
+    bsf festm, 0 ; Se activa la bandera de estado
+    bsf modsel, 0 ; Se activa la bandera de seleccion de division
+    return
+estm1: ; Modo1
+    bcf STATUS, 2
+    movlw 2
+    movwf counterm ; Se verifica que la variable sea 2
+    movf estado, w
+    subwf counterm, w
+    btfss STATUS, 2 ; Cuando es 2 se activa el status
+    goto $+7
+    bcf PORTB, 5
+    bsf PORTB, 6 ; Se apaga la led anterior y se prende la siguiente
+    bcf festm, 0
+    bsf festm, 1 ; Cambio de bnderas
+    bcf modsel, 0
+    bsf modsel, 1
+    return
+estm2: ; Modo2
+    bcf STATUS, 2
+    movlw 3
+    movwf counterm
+    movf estado, w
+    subwf counterm, w
+    btfss STATUS, 2
+    goto $+7
+    bcf PORTB, 6
+    bsf PORTB, 7
+    bcf festm, 1
+    bsf festm, 2
+    bcf modsel, 1
+    bsf modsel, 2
+    return
+estm3: ; Modo3
+    bcf STATUS, 2
+    movlw 4
+    movwf counterm
+    movf estado, w
+    subwf counterm, w
+    btfss STATUS, 2
+    goto $+6
+    bsf PORTB, 5
+    bsf PORTB, 6
+    bsf PORTB, 7
+    bcf festm, 2
+    bsf festm, 3
+    bcf modsel, 2
+    bsf modsel, 3
+    return
+reseteom: ; Modo de reincio
+    clrf dispm1 ; Se limpian las variables del display para
+    clrf dispm2 ; que estos esten apgados en el modo0
+    bcf PORTB, 5 ; Se apaga la ultima led
+    bcf PORTB, 6
+    bcf PORTB, 7
+    clrf festm ; Se limpian las banderas
+    clrf estado ; Se limpia la variable de estado
+    clrf modsel
+    return
+
+; configuración para los displays de los modos ---------------------------------
+modo1: ; Se crea la subrutina de la separacion de valores
+    clrf modo
+    clrf residuo
+    bcf STATUS, 0
+    movf tempm, 0 ; Se mueve lo que hay en el contador a w
+    movwf modtemp1
+    movwf modo ; Se mueve w a la variable residuos ; Empieza la parte de las decenas
+    movlw 10 ; Se mueve 10 a w
+    incf residuo
+    subwf modo, f ; Se le resta a residuos 10
+    btfsc STATUS, 0 ; Se verifica la bandera
+    goto $-3
+    decf residuo ; Se incrementa la variable decenas
+    addwf modo
+    movf residuo, w
+    call tabla7seg
+    movwf dispm1
+    movf modo, w
+    call tabla7seg
+    movwf dispm2
+    return
+
+modo2: ; Se crea la subrutina de la separacion de valores
+    clrf modo
+    clrf residuo
+    bcf STATUS, 0
+    movf tempm, 0 ; Se mueve lo que hay en el contador a w
+    movwf modtemp2
+    movwf modo ; Se mueve w a la variable residuos ; Empieza la parte de las decenas
+    movlw 10 ; Se mueve 10 a w
+    incf residuo
+    subwf modo, f ; Se le resta a residuos 10
+    btfsc STATUS, 0 ; Se verifica la bandera
+    goto $-3
+    decf residuo ; Se incrementa la variable decenas
+    addwf modo
+    movf residuo, w
+    call tabla7seg
+    movwf dispm1
+    movf modo, w
+    call tabla7seg
+    movwf dispm2
+    return
+
+modo3: ; Se crea la subrutina de la separacion de valores
+    clrf modo
+    clrf residuo
+    bcf STATUS, 0
+    movf tempm, 0 ; Se mueve lo que hay en el contador a w
+    movwf modtemp3
+    movwf modo ; Se mueve w a la variable residuos ; Empieza la parte de las decenas
+    movlw 10 ; Se mueve 10 a w
+    incf residuo
+    subwf modo, f ; Se le resta a residuos 10
+    btfsc STATUS, 0 ; Se verifica la bandera
+    goto $-3
+    decf residuo ; Se incrementa la variable decenas
+    addwf modo
+    movf residuo, w
+    call tabla7seg
+    movwf dispm1
+    movf modo, w
+    call tabla7seg
+    movwf dispm2
+    return
+
+; Rutina para incrementar los tiempos ------------------------------------------
+inctemp:
+    incf tempm ; Se incrementa una variable
+    bcf STATUS, 2 ; Se limpia status
+    movlw 21
+    subwf tempm, w ; Se verifica que no sea mayor a 21
+    btfss STATUS, 2
+    goto $+3
+    movlw 10 ; Si es mayor a 20, se le pone automaticamente 10
+    movwf tempm
+    return
+
+; Rutina para decrementar los tiempos ------------------------------------------
+dectemp:
+    decf tempm ; Variable a decrementar
+    bcf STATUS, 2
+    movlw 9
+    subwf tempm, w ; Se verifica que no sea menor a 10
+    btfss STATUS, 2
+    goto $+3
+    movlw 20 ; Si llega a ser menor de 10, se le pone 20
+    movwf tempm
+    return
+
+; Rutina para aceptar o rechazar los cambios -----------------------------------
+accept:
+    movlw 0
+    call tabla7seg ; Se muestra AC en el display para saber
+    movwf dispm1 ; en que modo se encuentran
+    movlw 0
+    call tabla7seg
+    movwf dispm2
+
+    btfss PORTB, UP ; Se revisa si se apacha el boton de aceptar
+    call send ; Se llama a la rutina de confirmar
+    btfss PORTB, DOWN ; Se revisa si se apacha el boton de cancelar
+    call reseteom ; Se limpia la rutina de estados
+    return
+
+; Rutina para mandar los tiempos a los semáforos -------------------------------
+send:
+    bsf reinicio, 0 ; Se utiliza esto para que los displas se detengan
+    call reseteoc ; Se llama al reseteo completo
+    movf modtemp1, w ; Se mueven las variables a los timers
+    movwf contador1
+    movf modtemp2, w
+    movwf contador2
+    movf modtemp3, w
+    movwf contador3
+    delay_small
+    bcf reinicio, 0
     return
 
 END
