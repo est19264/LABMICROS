@@ -139,7 +139,7 @@ int_tmr0:
     
 ; Lo que se busca hacer aca es revisar que display esta activado he ir al sig.
     btfsc   flags, 0		; Se verifica la bandera 
-    goto    disp2
+    goto    disp2		; Se va a la rutina adecuada
     btfsc   flags, 1
     goto    disp3
     btfsc   flags, 2
