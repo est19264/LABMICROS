@@ -5,9 +5,6 @@
  * Created on 13 de abril de 2021, 10:32 AM
  */
 
-#include <xc.h>
-#include <stdint.h>
-
 //-------------------------- Bits de configuraciÓn -----------------------------
 // CONFIG1
 #pragma config FOSC = INTRC_NOCLKOUT        // Oscillator Selection bits (INTOSCIO oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)
