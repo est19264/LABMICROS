@@ -47,13 +47,13 @@ char division(void);
 
 //--------------------------- Interrupciones -----------------------------------
 void __interrupt() isr(void){ //interrupciones
-    if(T0IF == 1){                           // Se verifica la bandera del timer0
+    if(T0IF == 1){                          // Se verifica la bandera del timer0
         PORTEbits.RE2 = 0;                  // Apago el transistor 2
         PORTEbits.RE0 = 1;                  // Prendo transistor 0
         PORTD = (tabla7seg[centena]);       // Ingreso del valor para las centenas
         multiplex = 0b00000001;             // Prendo una flag
         
-        if (multiplex == 0b00000001){        // Se verifica que bandera esta encendida
+        if (multiplex == 0b00000001){       // Se verifica que bandera esta encendida
             PORTEbits.RE0 = 0;              
             PORTEbits.RE1 = 1;
             PORTD = (tabla7seg[decena]);    // Ingreso del valor para las decenas
@@ -82,21 +82,21 @@ void __interrupt() isr(void){ //interrupciones
 void main(void) 
 {
 
-    setup();    // Llamo a mi configuracion
-    ADCON0bits.GO = 1;     // Bita para que comience la conversion
+    setup();                                // Llamo a mi configuracion principal
+    ADCON0bits.GO = 1;                      // Bit para que comience la conversion
     
-    while(1)    // Equivale al loop
+    while(1)  
     {
         if(ADCON0bits.GO == 0){
-            if(ADCON0bits.CHS == 1)
+            if(ADCON0bits.CHS == 1)         // Revisa si se utiliza el primer potenciómetro 
                 ADCON0bits.CHS = 0;
             else
-                ADCON0bits.CHS = 1;
+                ADCON0bits.CHS = 1;         // Revisa si se utiliza el segundo potenciómetro 
             
             __delay_us(100);
             ADCON0bits.GO = 1;
         }
-       division(); 
+       division();                          // Se llama la subrutina de división
     }
 }
 
@@ -127,7 +127,7 @@ void setup(void){
     // Se configura el oscilador
     OSCCONbits.IRCF2 = 0;
     OSCCONbits.IRCF1 = 1;
-    OSCCONbits.IRCF0 = 0;   // Se configura a 250kHz
+    OSCCONbits.IRCF0 = 0;                   // Se configura a 250kHz
     OSCCONbits.SCS = 1;
     
     // Timer0
@@ -141,25 +141,25 @@ void setup(void){
     INTCONbits.GIE = 1;
     INTCONbits.T0IE = 1;
     INTCONbits.T0IF = 0;
-    INTCONbits.PEIE = 1;    // Periferical interrupt
-    PIE1bits.ADIE = 1;      // Activar la interrupcion del ADC
-    PIR1bits.ADIF = 0;      // Bandera del ADC
+    INTCONbits.PEIE = 1;                    // Periferical interrupt
+    PIE1bits.ADIE = 1;                      // Activar la interrupcion del ADC
+    PIR1bits.ADIF = 0;                      // Bandera del ADC
     
     // Configuracion del ADC
     ADCON0bits.ADCS0 = 1;
-    ADCON0bits.ADCS1 = 1; // Se configura el oscilador interno
-    ADCON0bits.ADON = 1;        // Activar el ADC
+    ADCON0bits.ADCS1 = 1;                   // Se configura el oscilador interno
+    ADCON0bits.ADON = 1;                    // Activar el ADC
     
-    ADCON0bits.CHS = 0;         // Canal 0
+    ADCON0bits.CHS = 0;                     // Canal 0
     
-    ADCON1bits.ADFM = 0;        // Justificado a la izquierda
+    ADCON1bits.ADFM = 0;                    // Justificado a la izquierda
     ADCON1bits.VCFG0 = 0;
     ADCON1bits.VCFG1 = 0;
 }
 
 // Sub-rutina para la división
 char division(void) {
-    centena = num/100;                    // Divide el valor de PORTA
+    centena = num/100;                      // Divide el valor del potenciómetro
     residuo = num%100;
     decena = residuo/10;                    // El residuo se devide entre 10
     unidad = residuo%10;                    // Se mueve ese residuo a unidades

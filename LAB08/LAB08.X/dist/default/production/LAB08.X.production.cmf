@@ -28,7 +28,7 @@ idataBANK0 CODE 0 215 215 A 2
 dataBANK0 BANK0 1 2B 2B A 1
 bssCOMMON COMMON 1 76 76 4 1
 config CONFIG 4 2007 2007 2 2
-$C:\Users\diego\AppData\Local\Temp\sjo0.o
+$C:\Users\diego\AppData\Local\Temp\s7ug.o
 reset_vec CODE 0 0 0 3 2
 end_init CODE 0 E E 3 2
 config CONFIG 4 2007 2007 2 2
@@ -78,28 +78,28 @@ STRING 21F-1FFF 2
 # All other numeric values are in decimal.
 %LINETAB
 $dist/default/production\LAB08.X.production.o
-11 cinit CODE >500:C:\Users\diego\AppData\Local\Temp\sjo0.s
-11 cinit CODE >503:C:\Users\diego\AppData\Local\Temp\sjo0.s
-11 cinit CODE >568:C:\Users\diego\AppData\Local\Temp\sjo0.s
-12 cinit CODE >569:C:\Users\diego\AppData\Local\Temp\sjo0.s
-13 cinit CODE >570:C:\Users\diego\AppData\Local\Temp\sjo0.s
-14 cinit CODE >571:C:\Users\diego\AppData\Local\Temp\sjo0.s
-15 cinit CODE >572:C:\Users\diego\AppData\Local\Temp\sjo0.s
-16 cinit CODE >573:C:\Users\diego\AppData\Local\Temp\sjo0.s
-17 cinit CODE >574:C:\Users\diego\AppData\Local\Temp\sjo0.s
-18 cinit CODE >575:C:\Users\diego\AppData\Local\Temp\sjo0.s
-19 cinit CODE >576:C:\Users\diego\AppData\Local\Temp\sjo0.s
-1A cinit CODE >577:C:\Users\diego\AppData\Local\Temp\sjo0.s
-1F cinit CODE >581:C:\Users\diego\AppData\Local\Temp\sjo0.s
-20 cinit CODE >582:C:\Users\diego\AppData\Local\Temp\sjo0.s
-21 cinit CODE >583:C:\Users\diego\AppData\Local\Temp\sjo0.s
-22 cinit CODE >586:C:\Users\diego\AppData\Local\Temp\sjo0.s
-23 cinit CODE >587:C:\Users\diego\AppData\Local\Temp\sjo0.s
-24 cinit CODE >588:C:\Users\diego\AppData\Local\Temp\sjo0.s
-25 cinit CODE >589:C:\Users\diego\AppData\Local\Temp\sjo0.s
-26 cinit CODE >595:C:\Users\diego\AppData\Local\Temp\sjo0.s
-26 cinit CODE >597:C:\Users\diego\AppData\Local\Temp\sjo0.s
-27 cinit CODE >598:C:\Users\diego\AppData\Local\Temp\sjo0.s
+11 cinit CODE >500:C:\Users\diego\AppData\Local\Temp\s7ug.s
+11 cinit CODE >503:C:\Users\diego\AppData\Local\Temp\s7ug.s
+11 cinit CODE >568:C:\Users\diego\AppData\Local\Temp\s7ug.s
+12 cinit CODE >569:C:\Users\diego\AppData\Local\Temp\s7ug.s
+13 cinit CODE >570:C:\Users\diego\AppData\Local\Temp\s7ug.s
+14 cinit CODE >571:C:\Users\diego\AppData\Local\Temp\s7ug.s
+15 cinit CODE >572:C:\Users\diego\AppData\Local\Temp\s7ug.s
+16 cinit CODE >573:C:\Users\diego\AppData\Local\Temp\s7ug.s
+17 cinit CODE >574:C:\Users\diego\AppData\Local\Temp\s7ug.s
+18 cinit CODE >575:C:\Users\diego\AppData\Local\Temp\s7ug.s
+19 cinit CODE >576:C:\Users\diego\AppData\Local\Temp\s7ug.s
+1A cinit CODE >577:C:\Users\diego\AppData\Local\Temp\s7ug.s
+1F cinit CODE >581:C:\Users\diego\AppData\Local\Temp\s7ug.s
+20 cinit CODE >582:C:\Users\diego\AppData\Local\Temp\s7ug.s
+21 cinit CODE >583:C:\Users\diego\AppData\Local\Temp\s7ug.s
+22 cinit CODE >586:C:\Users\diego\AppData\Local\Temp\s7ug.s
+23 cinit CODE >587:C:\Users\diego\AppData\Local\Temp\s7ug.s
+24 cinit CODE >588:C:\Users\diego\AppData\Local\Temp\s7ug.s
+25 cinit CODE >589:C:\Users\diego\AppData\Local\Temp\s7ug.s
+26 cinit CODE >595:C:\Users\diego\AppData\Local\Temp\s7ug.s
+26 cinit CODE >597:C:\Users\diego\AppData\Local\Temp\s7ug.s
+27 cinit CODE >598:C:\Users\diego\AppData\Local\Temp\s7ug.s
 4 intentry CODE >49:C:\Users\diego\OneDrive\Escritorio\UVG\MICROCONTROLADORES\LABMICROS\LAB08\LAB08.X\main08.c
 149 text5 CODE >49:C:\Users\diego\OneDrive\Escritorio\UVG\MICROCONTROLADORES\LABMICROS\LAB08\LAB08.X\main08.c
 149 text5 CODE >50:C:\Users\diego\OneDrive\Escritorio\UVG\MICROCONTROLADORES\LABMICROS\LAB08\LAB08.X\main08.c
@@ -226,23 +226,23 @@ ED text2 CODE >166:C:\Users\diego\OneDrive\Escritorio\UVG\MICROCONTROLADORES\LAB
 1F2 maintext CODE >96:C:\Users\diego\OneDrive\Escritorio\UVG\MICROCONTROLADORES\LABMICROS\LAB08\LAB08.X\main08.c
 1F6 maintext CODE >97:C:\Users\diego\OneDrive\Escritorio\UVG\MICROCONTROLADORES\LABMICROS\LAB08\LAB08.X\main08.c
 1F9 maintext CODE >99:C:\Users\diego\OneDrive\Escritorio\UVG\MICROCONTROLADORES\LABMICROS\LAB08\LAB08.X\main08.c
-202 inittext CODE >542:C:\Users\diego\AppData\Local\Temp\sjo0.s
-202 inittext CODE >543:C:\Users\diego\AppData\Local\Temp\sjo0.s
-203 inittext CODE >544:C:\Users\diego\AppData\Local\Temp\sjo0.s
-204 inittext CODE >545:C:\Users\diego\AppData\Local\Temp\sjo0.s
-205 inittext CODE >546:C:\Users\diego\AppData\Local\Temp\sjo0.s
-206 inittext CODE >553:C:\Users\diego\AppData\Local\Temp\sjo0.s
-206 inittext CODE >554:C:\Users\diego\AppData\Local\Temp\sjo0.s
-20B inittext CODE >555:C:\Users\diego\AppData\Local\Temp\sjo0.s
-20C inittext CODE >556:C:\Users\diego\AppData\Local\Temp\sjo0.s
-20D inittext CODE >557:C:\Users\diego\AppData\Local\Temp\sjo0.s
-20E inittext CODE >558:C:\Users\diego\AppData\Local\Temp\sjo0.s
-20F inittext CODE >559:C:\Users\diego\AppData\Local\Temp\sjo0.s
-210 inittext CODE >560:C:\Users\diego\AppData\Local\Temp\sjo0.s
-211 inittext CODE >561:C:\Users\diego\AppData\Local\Temp\sjo0.s
-212 inittext CODE >562:C:\Users\diego\AppData\Local\Temp\sjo0.s
-213 inittext CODE >563:C:\Users\diego\AppData\Local\Temp\sjo0.s
-214 inittext CODE >564:C:\Users\diego\AppData\Local\Temp\sjo0.s
+202 inittext CODE >542:C:\Users\diego\AppData\Local\Temp\s7ug.s
+202 inittext CODE >543:C:\Users\diego\AppData\Local\Temp\s7ug.s
+203 inittext CODE >544:C:\Users\diego\AppData\Local\Temp\s7ug.s
+204 inittext CODE >545:C:\Users\diego\AppData\Local\Temp\s7ug.s
+205 inittext CODE >546:C:\Users\diego\AppData\Local\Temp\s7ug.s
+206 inittext CODE >553:C:\Users\diego\AppData\Local\Temp\s7ug.s
+206 inittext CODE >554:C:\Users\diego\AppData\Local\Temp\s7ug.s
+20B inittext CODE >555:C:\Users\diego\AppData\Local\Temp\s7ug.s
+20C inittext CODE >556:C:\Users\diego\AppData\Local\Temp\s7ug.s
+20D inittext CODE >557:C:\Users\diego\AppData\Local\Temp\s7ug.s
+20E inittext CODE >558:C:\Users\diego\AppData\Local\Temp\s7ug.s
+20F inittext CODE >559:C:\Users\diego\AppData\Local\Temp\s7ug.s
+210 inittext CODE >560:C:\Users\diego\AppData\Local\Temp\s7ug.s
+211 inittext CODE >561:C:\Users\diego\AppData\Local\Temp\s7ug.s
+212 inittext CODE >562:C:\Users\diego\AppData\Local\Temp\s7ug.s
+213 inittext CODE >563:C:\Users\diego\AppData\Local\Temp\s7ug.s
+214 inittext CODE >564:C:\Users\diego\AppData\Local\Temp\s7ug.s
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -269,10 +269,10 @@ __Heeprom_data 0 0 EEDATA 3 eeprom_data -
 __Hstrings 0 0 ABS 0 strings -
 _T0IF 5A 0 ABS 0 - dist/default/production\LAB08.X.production.o
 _TMR0 1 0 ABS 0 - dist/default/production\LAB08.X.production.o
-___sp 0 0 STACK 2 stack C:\Users\diego\AppData\Local\Temp\sjo0.o
+___sp 0 0 STACK 2 stack C:\Users\diego\AppData\Local\Temp\s7ug.o
 _main 3A8 0 CODE 0 maintext dist/default/production\LAB08.X.production.o
 btemp 7E 0 ABS 0 - dist/default/production\LAB08.X.production.o
-start 1C 0 CODE 0 init C:\Users\diego\AppData\Local\Temp\sjo0.o
+start 1C 0 CODE 0 init C:\Users\diego\AppData\Local\Temp\s7ug.o
 __size_of___awdiv 0 0 ABS 0 - dist/default/production\LAB08.X.production.o
 __size_of___awmod 0 0 ABS 0 - dist/default/production\LAB08.X.production.o
 __size_of_main 0 0 ABS 0 - dist/default/production\LAB08.X.production.o
@@ -281,12 +281,12 @@ _OPTION_REGbits 81 0 ABS 0 - dist/default/production\LAB08.X.production.o
 __LidataBANK0 0 0 ABS 0 idataBANK0 -
 __Hpowerup 0 0 CODE 0 powerup -
 ___awmod@sign 25 0 BANK0 1 cstackBANK0 dist/default/production\LAB08.X.production.o
-intlevel0 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\sjo0.o
-intlevel1 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\sjo0.o
-intlevel2 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\sjo0.o
-intlevel3 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\sjo0.o
-intlevel4 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\sjo0.o
-intlevel5 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\sjo0.o
+intlevel0 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\s7ug.o
+intlevel1 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\s7ug.o
+intlevel2 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\s7ug.o
+intlevel3 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\s7ug.o
+intlevel4 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\s7ug.o
+intlevel5 0 0 ENTRY 0 functab C:\Users\diego\AppData\Local\Temp\s7ug.o
 __LbssCOMMON 0 0 ABS 0 bssCOMMON -
 _division 126 0 CODE 0 text2 dist/default/production\LAB08.X.production.o
 _OSCCONbits 8F 0 ABS 0 - dist/default/production\LAB08.X.production.o
@@ -302,15 +302,15 @@ __Lmaintext 0 0 ABS 0 maintext -
 ___awdiv@divisor 20 0 BANK0 1 cstackBANK0 dist/default/production\LAB08.X.production.o
 __end_of___awdiv 126 0 CODE 0 text4 dist/default/production\LAB08.X.production.o
 __end_of___awmod 292 0 CODE 0 text3 dist/default/production\LAB08.X.production.o
-___stackhi 0 0 ABS 0 - C:\Users\diego\AppData\Local\Temp\sjo0.o
-___stacklo 0 0 ABS 0 - C:\Users\diego\AppData\Local\Temp\sjo0.o
+___stackhi 0 0 ABS 0 - C:\Users\diego\AppData\Local\Temp\s7ug.o
+___stacklo 0 0 ABS 0 - C:\Users\diego\AppData\Local\Temp\s7ug.o
 __size_of_setup 0 0 ABS 0 - dist/default/production\LAB08.X.production.o
 start_initialization 22 0 CODE 0 cinit dist/default/production\LAB08.X.production.o
 _TRISAbits 85 0 ABS 0 - dist/default/production\LAB08.X.production.o
 _TRISBbits 86 0 ABS 0 - dist/default/production\LAB08.X.production.o
 __pcstackBANK0 20 0 BANK0 1 cstackBANK0 dist/default/production\LAB08.X.production.o
 _residuo 77 0 COMMON 1 bssCOMMON dist/default/production\LAB08.X.production.o
-___int_sp 0 0 STACK 2 stack C:\Users\diego\AppData\Local\Temp\sjo0.o
+___int_sp 0 0 STACK 2 stack C:\Users\diego\AppData\Local\Temp\s7ug.o
 __Hbank0 0 0 ABS 0 bank0 -
 __Hbank1 0 0 ABS 0 bank1 -
 __Hbank2 0 0 ABS 0 bank2 -
@@ -358,7 +358,7 @@ saved_w 7E 0 ABS 0 - dist/default/production\LAB08.X.production.o
 _decena 78 0 COMMON 1 bssCOMMON dist/default/production\LAB08.X.production.o
 __end_of_isr 33E 0 CODE 0 text5 dist/default/production\LAB08.X.production.o
 __Lintentry 8 0 CODE 0 intentry -
-reset_vec 0 0 CODE 0 reset_vec C:\Users\diego\AppData\Local\Temp\sjo0.o
+reset_vec 0 0 CODE 0 reset_vec C:\Users\diego\AppData\Local\Temp\s7ug.o
 __pdataBANK0 2B 0 BANK0 1 dataBANK0 dist/default/production\LAB08.X.production.o
 __LbssBANK0 0 0 ABS 0 bssBANK0 -
 ___awmod@counter 24 0 BANK0 1 cstackBANK0 dist/default/production\LAB08.X.production.o
