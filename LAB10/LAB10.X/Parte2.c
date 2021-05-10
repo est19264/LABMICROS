@@ -102,7 +102,7 @@ void setup(void){
     // Configuración de inputs y outputs
     TRISA = 0x0;
     TRISB = 0x0;
-    
+     
     // Se limpian los puertos
     PORTA = 0x00;
     PORTB = 0x00;
