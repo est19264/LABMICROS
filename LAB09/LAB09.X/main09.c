@@ -84,7 +84,8 @@ void setup(void){
     // Configurar bits de salida o entradaas
     TRISAbits.TRISA0 = 1;
     TRISAbits.TRISA1 = 1;
-    TRISC = 0x00;
+    TRISCbits.TRISC1 = 0;
+    TRISCbits.TRISC2 = 0;
     
     // Se limpian los puertos
     PORTA = 0x00;

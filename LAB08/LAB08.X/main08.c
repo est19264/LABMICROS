@@ -100,7 +100,7 @@ void main(void)
     }
 }
 
-//----------------------------- SUB-RUTINAS ------------------------------------
+//------------------------------ Funciones -------------------------------------
 // Sub-rutina de configuraciones generales
 void setup(void){
     // Configuraciones de puertos digitales
